@@ -15,7 +15,7 @@ The syntax is :
 
   `python metronome.py [tempo]`
 
-where tempo is an optional integer expressed in beats per minute (bpm). If it is ommited, the tempo will be 80.
+where tempo is an optional integer expressed in beats per minute (bpm). If it is ommited, the tempo will be 80. The script will run forever ; to interrupt it send it a SIGHUP (with Ctrl-C in your console). It will then give you the option to quit by pressing `q`, or to resume, pressing any other key.
 
 Note that this script was written for python2. If you have other python versions installed, you should rather use :
 
