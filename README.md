@@ -4,7 +4,10 @@ A script that uses python, python-mingus and fluidsynth to reproduce a tone at a
 
 ## Installation
 
-You will need `python` (called `python2` under Arch), `python-mingus` and `fluidsynth` to use this script. Then just download and run the script.
+You will need `python`, `python-mingus` and `fluidsynth` to use this script. `python-mingus` is a wonderful python module dedicated to music ; if it isn't in your distribution's repo you can install it with
+  `pip install mingus`
+
+Then just download and run the script.
 
 ## Usage
 
