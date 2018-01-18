@@ -16,7 +16,7 @@ from mingus.core import value, chords
 from mingus.midi import fluidsynth
 
 
-SF2='/home/lafleur/Public/soundfonts/african.sf2'
+SF2='african.sf2'
 if len(argv) == 2:
     bpm = int(argv[1])
 elif len(argv) == 1:
