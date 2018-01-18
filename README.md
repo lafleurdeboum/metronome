@@ -13,6 +13,10 @@ Then just download and run the script. Oh you will also need `getch.py`, and a s
 
 The syntax is :
 
-  `metronome.py [tempo]`
+  `python metronome.py [tempo]`
 
 where tempo is an optional integer expressed in beats per minute (bpm). If it is ommited, the tempo will be 80.
+
+Note that this script was written for python2. If you have other python versions installed, you should rather use :
+
+  `python2 metronome.py [tempo]`
