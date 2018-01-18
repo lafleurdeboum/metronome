@@ -7,7 +7,7 @@ A script that uses python, python-mingus and fluidsynth to reproduce a tone at a
 You will need `python`, `python-mingus` and `fluidsynth` to use this script. `python-mingus` is a wonderful python module dedicated to music ; if it isn't in your distribution's repo you can install it with
   `pip install mingus`
 
-Then just download and run the script. Oh you will also need getch.py, and a soundfont file, called african.sf2, living in the same dir as the script. Courtesy of Thomas Hammer at hammersound : http://hammersound.net/hs_soundfonts.html . I must say that allthough his website does mention a copyright at the bottom of it, I was unable to locate any license involved in this copyright. The site just mentions that one _can_ download and use the soundfonts. TBC ...
+Then just download and run the script. Oh you will also need `getch.py`, and a soundfont file, called `african.sf2`, living in the same dir as the script. Courtesy of Thomas Hammer at hammersound : http://hammersound.net/hs_soundfonts.html . I must say that allthough his website does mention a copyright at the bottom of it, I was unable to locate any license involved in this copyright. The site just mentions that one _can_ download and use the soundfonts. TBC ...
 
 ## Usage
 
