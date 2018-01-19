@@ -25,6 +25,20 @@ else:
     raise SystemExit(__doc__)
 
 
+def tellduration(starttime):
+    duration = int(time()) - int(starttime)
+    minutes = duration / 60 # integer division
+    seconds = duration % 60
+    sleep(0.3)
+    if minutes == 0:
+        msg = 'interrupted by user after ' + str(seconds) + ' seconds. '
+    else:
+        msg = 'interrupted by user after ' + str(minutes) + ' minutes ' + str(seconds) + ' seconds. '
+    msg += 'Press q to quit, any other key to resume.'
+    print
+    print(msg)
+
+
 
 # Chords
 
@@ -63,8 +77,8 @@ for i in range(10):
     # The mingus syntax is curious - this adds metronome_bar to metronome_track :
     metronome_track + metronome_bar
 
-#if not fluidsynth.init(SF2, driver='alsa'):
-if not fluidsynth.init(SF2):
+#if not fluidsynth.init(SF2):
+if not fluidsynth.init(SF2, driver='alsa'):
     raise SystemExit('Could not load ' + SF2)
 
 fluidsynth.set_instrument(0, 0)
@@ -77,21 +91,11 @@ print('press a key to start')
 key = getch()
 while True:
     try:
-        starttime = int(time())
+        starttime = time()
         while True:
             fluidsynth.play_Track(metronome_track, bpm=bpm)
     except KeyboardInterrupt:
-        duration = int(time()) - starttime
-        minutes = duration / 60 # integer division
-        seconds = duration % 60
-        sleep(0.3)
-        if minutes == 0:
-            msg = 'interrupted by user after ' + str(seconds) + ' seconds. '
-        else:
-            msg = 'interrupted by user after ' + str(minutes) + ' minutes ' + str(seconds) + ' seconds. '
-        msg += 'Press q to quit, any other key to resume.'
-        print
-        print(msg)
+        tellduration(starttime)
         key = getch()
         if key == 'q':
             raise SystemExit
