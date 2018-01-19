@@ -29,7 +29,6 @@ def tellduration(starttime):
         msg = 'interrupted by user after ' + str(seconds) + ' seconds. '
     else:
         msg = 'interrupted by user after ' + str(minutes) + ' minutes ' + str(seconds) + ' seconds. '
-    msg += 'Press q to quit, any other key to resume.'
     print
     print(msg)
 
@@ -67,13 +66,17 @@ class metronome():
         fluidsynth.set_instrument(0, 0)
         fluidsynth.main_volume(0, 127)
 
+        self.play = True
         # Breathe a (tenth of) second, toss it all
         sleep(0.1)
 
     def run(self, bpm):
-        while True:
+        while self.play == True:
             fluidsynth.play_Track(self.metronome_track, bpm=bpm)
  
+    def stop(self):
+        self.play = False
+        #fluidsynth.stop_everything()
 
 if __name__ == '__main__':
     if len(argv) == 2:
@@ -92,8 +95,10 @@ if __name__ == '__main__':
             a_metronome.run(bpm)
         except KeyboardInterrupt:
             tellduration(starttime)
+            print 'Press q to quit, any other key to resume.'
             key = getch()
             if key == 'q':
+                a_metronome.stop()
                 raise SystemExit
             else:
                 continue
