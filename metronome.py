@@ -7,9 +7,6 @@ syntax : metronome.py [tempo]
     where tempo is expressed in bpm. In its absence metronome will play at 80bpm.
 '''
 
-
-# Special comment here
-
 from getch import getch
 from sys import argv
 from time import sleep, time
@@ -58,34 +55,22 @@ drum = MidiInstrument()
 drum.name = drum.names[0]
 #drum.instrument_nr = 1
 
-#piano = MidiInstrument()
-#piano.name = piano.names[0] # Doesn't work without that. To hell with those.
-#piano.instrument_nr = 0
-
-
 # Tracks
 
 metronome_track = Track(drum)
-#intro_track = Track(drum)
-#clave_track = Track(drum)
 
 for i in range(10):
+    # The mingus syntax is curious - this adds metronome_bar to metronome_track :
     metronome_track + metronome_bar
 
-# Composition
-
-#salsa = Composition()
-#salsa.add_track(clave_track)
-
-if not fluidsynth.init(SF2, driver='alsa'):
+#if not fluidsynth.init(SF2, driver='alsa'):
+if not fluidsynth.init(SF2):
     raise SystemExit('Could not load ' + SF2)
 
 fluidsynth.set_instrument(0, 0)
-#fluidsynth.set_instrument(1, 1)
 fluidsynth.main_volume(0, 127)
-#fluidsynth.main_volume(1, 127)
 
-# Breathe a second, toss it all
+# Breathe a (tenth of) second, toss it all
 sleep(0.1)
 
 print('press a key to start')
@@ -112,16 +97,5 @@ while True:
             raise SystemExit
         else:
             continue
-
-#fluidsynth.play_Composition(salsa, channels=(0, 1))
-
-#print('launching seq')
-#seq = fluidsynth.FluidSynthSequencer()
-#seq.init()
-#seq.load_sound_font(SF2)
-#seq.main_volume(0, 127)
-#seq.main_volume(1, 127)
-#seq.play_Composition(salsa)
-#fluidsynth.play_Track(drum_track)
 
 
