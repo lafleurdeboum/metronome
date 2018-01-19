@@ -71,21 +71,9 @@ class metronome():
         sleep(0.1)
 
     def run(self, bpm):
-        print('press a key to start')
-        key = getch()
         while True:
-            try:
-                starttime = time()
-                while True:
-                    fluidsynth.play_Track(self.metronome_track, bpm=bpm)
-            except KeyboardInterrupt:
-                tellduration(starttime)
-                key = getch()
-                if key == 'q':
-                    raise SystemExit
-                else:
-                    continue
-
+            fluidsynth.play_Track(self.metronome_track, bpm=bpm)
+ 
 
 if __name__ == '__main__':
     if len(argv) == 2:
@@ -94,5 +82,20 @@ if __name__ == '__main__':
         bpm = default_bpm
     else:
         raise SystemExit(__doc__)
-    this = metronome()
-    this.run(bpm)
+    a_metronome = metronome()
+
+    print('press a key to start')
+    key = getch()
+    while True:
+        starttime = time()
+        try:
+            a_metronome.run(bpm)
+        except KeyboardInterrupt:
+            tellduration(starttime)
+            key = getch()
+            if key == 'q':
+                raise SystemExit
+            else:
+                continue
+
+
