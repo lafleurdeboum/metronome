@@ -7,6 +7,9 @@ syntax : metronome.py [tempo]
     where tempo is expressed in bpm. In its absence metronome will play at 80bpm.
 '''
 
+
+# Special comment here
+
 from getch import getch
 from sys import argv
 from time import sleep, time
