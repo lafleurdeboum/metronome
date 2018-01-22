@@ -33,6 +33,11 @@ def tellduration(starttime):
     print(msg)
 
 
+class printer():
+    def notify(self, msg_type, param_dict):
+        print msg_type
+        print param_dict
+
 class metronome():
     def __init__(self):
         silence = Bar()
@@ -60,11 +65,15 @@ class metronome():
             self.metronome_track + metronome_bar
 
         #if not fluidsynth.init(SF2):
-        if not fluidsynth.init(SF2, driver='alsa'):
-            raise SystemExit('Could not load ' + SF2)
+        self.seq = fluidsynth.FluidSynthSequencer()
+        self.seq.start_audio_output(driver="alsa")
+        self.seq.load_sound_font(SF2)
 
-        fluidsynth.set_instrument(0, 0)
-        fluidsynth.main_volume(0, 127)
+        self.seq.set_instrument(0, 0)
+        self.seq.main_volume(0, 127)
+        self.seq.init()
+        self.printer = printer()
+        self.seq.attach(self.printer)
 
         self.play = True
         # Breathe a (tenth of) second, toss it all
@@ -72,11 +81,11 @@ class metronome():
 
     def run(self, bpm):
         while self.play == True:
-            fluidsynth.play_Track(self.metronome_track, bpm=bpm)
+            self.seq.play_Track(self.metronome_track, bpm=bpm)
  
     def stop(self):
         self.play = False
-        #fluidsynth.stop_everything()
+        #seq.stop_everything()
 
 
 if __name__ == '__main__':
@@ -103,5 +112,4 @@ if __name__ == '__main__':
                 raise SystemExit
             else:
                 continue
-
 
