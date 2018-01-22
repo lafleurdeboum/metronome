@@ -16,9 +16,8 @@ from mingus.containers.instrument import MidiInstrument
 from mingus.core import value, chords
 from mingus.midi import fluidsynth
 
-
 default_bpm = 80
-SF2='african.sf2'
+SF2 = 'african.sf2'
 
 
 def tellduration(starttime):
@@ -41,6 +40,7 @@ class printer():
         putch(msg_type)
         sleep(1)
         putch('')
+
 
 class metronome():
     def __init__(self):
@@ -70,8 +70,8 @@ class metronome():
 
         #if not fluidsynth.init(SF2):
         self.seq = fluidsynth.FluidSynthSequencer()
-        self.seq.start_audio_output(driver="alsa")
         self.seq.load_sound_font(SF2)
+        self.seq.start_audio_output(driver="alsa")
 
         self.seq.set_instrument(0, 0)
         self.seq.main_volume(0, 127)
