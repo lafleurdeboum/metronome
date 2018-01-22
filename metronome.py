@@ -78,6 +78,7 @@ class metronome():
         self.play = False
         #fluidsynth.stop_everything()
 
+
 if __name__ == '__main__':
     if len(argv) == 2:
         bpm = int(argv[1])
