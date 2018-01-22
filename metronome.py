@@ -8,6 +8,7 @@ syntax : metronome.py [tempo]
 '''
 
 from getch import getch
+from putch import Putch as putch
 from sys import argv
 from time import sleep, time
 from mingus.containers import Note, NoteContainer, Bar, Track, Composition
@@ -35,8 +36,11 @@ def tellduration(starttime):
 
 class printer():
     def notify(self, msg_type, param_dict):
-        print msg_type
-        print param_dict
+        #print msg_type
+        #print param_dict
+        putch(msg_type)
+        sleep(1)
+        putch('')
 
 class metronome():
     def __init__(self):
