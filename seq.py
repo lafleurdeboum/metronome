@@ -28,6 +28,7 @@ metronome_bar.place_notes('D-5', 4)
 metronome_bar.place_notes('D-4', 4)
 metronome_bar.place_notes('D-4', 4)
 metronome_bar.place_notes('D-4', 4)
+
 # Use current_beat to check that the bar is full
 if metronome_bar.current_beat != 1:
     raise SystemExit('metronome_bar is not full !')
