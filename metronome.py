@@ -17,13 +17,13 @@ from mingus.midi import fluidsynth
 
 
 default_bpm = 80
-SF2='Salsa.sf2'
+SF2='african.sf2'
 instrument_bank_nr = 0
 
 
 def tellduration(starttime):
     duration = int(time()) - int(starttime)
-    minutes = duration / 60 # integer division
+    minutes = duration / 60 # integer division - gives the lower integer in python2
     seconds = duration % 60
     sleep(0.3)
     if minutes == 0:
