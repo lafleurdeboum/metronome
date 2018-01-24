@@ -78,7 +78,7 @@ class metronome():
         self.seq.main_volume(0, 127)
         self.seq.fs.program_reset()
         self.printer = printer()
-        # TODO need to attach _over_ the sound thing
+        # TODO when an object is attached, the sequencer doesn't play a sound anymore !
         #self.seq.attach(self.printer)
 
         self.play = True
@@ -101,6 +101,7 @@ if __name__ == '__main__':
         bpm = default_bpm
     else:
         raise SystemExit(__doc__)
+
     a_metronome = metronome()
 
     print('press a key to start')
