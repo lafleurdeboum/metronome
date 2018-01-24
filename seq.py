@@ -9,7 +9,7 @@ from mingus.containers.instrument import MidiInstrument
 from mingus.core import value, chords
 from mingus.midi import fluidsynth
 
-SF2 = 'african.sf2'
+SF2 = 'Salsa.sf2'
 
 class printer():
     def notify(self, msg_type, param_dict):
@@ -32,9 +32,6 @@ if metronome_bar.current_beat != 1:
     raise SystemExit('metronome_bar is not full !')
 
 drum = MidiInstrument()
-#drum.name = "AFRICAN DRUM"
-drum.name = drum.names[0]
-#drum.instrument_nr = 1
 
 metronome_track = Track(drum)
 
@@ -44,11 +41,12 @@ for i in range(2):
 
 #if not fluidsynth.init(SF2):
 seq = fluidsynth.FluidSynthSequencer()
-seq.load_sound_font(SF2)
-seq.set_instrument(1, 0)
-seq.main_volume(0, 127)
 seq.init()
+seq.load_sound_font(SF2)
+#seq.set_instrument(1, 1)
 seq.start_audio_output(driver="alsa")
+seq.main_volume(0, 127)
+seq.fs.program_reset()
 
 
 a_printer = printer()

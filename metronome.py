@@ -70,14 +70,16 @@ class metronome():
 
         #if not fluidsynth.init(SF2):
         self.seq = fluidsynth.FluidSynthSequencer()
+        self.seq.init()
         self.seq.load_sound_font(SF2)
         self.seq.start_audio_output(driver="alsa")
 
         self.seq.set_instrument(0, 0)
         self.seq.main_volume(0, 127)
-        self.seq.init()
+        self.seq.fs.program_reset()
         self.printer = printer()
-        self.seq.attach(self.printer)
+        # TODO need to attach _over_ the sound thing
+        #self.seq.attach(self.printer)
 
         self.play = True
         # Breathe a (tenth of) second, toss it all
