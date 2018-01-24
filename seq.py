@@ -1,7 +1,5 @@
 
 # Made this to try to have SOUND with the sequencer - doesn't work right now
-# Keeps saying there's no preset 0 in bank 0 in SoundFont 1
-# Whereas it used to say there's no preset found on channel 9 [bank=128 prog=0]
 # when I use fluidsynth.play_Track direcly
 
 from time import sleep
@@ -47,12 +45,12 @@ for i in range(2):
 #if not fluidsynth.init(SF2):
 seq = fluidsynth.FluidSynthSequencer()
 seq.load_sound_font(SF2)
+seq.set_instrument(1, 0)
+seq.main_volume(0, 127)
 seq.init()
 seq.start_audio_output(driver="alsa")
 
 
-seq.set_instrument(1, 0)
-seq.main_volume(0, 127)
 a_printer = printer()
 seq.attach(a_printer)
 
