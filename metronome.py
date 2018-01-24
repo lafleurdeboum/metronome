@@ -17,7 +17,8 @@ from mingus.midi import fluidsynth
 
 
 default_bpm = 80
-SF2='african.sf2'
+SF2='Salsa.sf2'
+instrument_bank_nr = 0
 
 
 def tellduration(starttime):
@@ -44,14 +45,11 @@ class metronome():
         metronome_bar.place_notes('D-4', 4)
         metronome_bar.place_notes('D-4', 4)
         metronome_bar.place_notes('D-4', 4)
-        # Use current_beat to check that the bar is full
+
         if metronome_bar.current_beat != 1:
             raise SystemExit('metronome_bar is not full !')
 
         drum = MidiInstrument()
-        #drum.name = "AFRICAN DRUM"
-        drum.name = drum.names[0]
-        #drum.instrument_nr = 1
 
         self.metronome_track = Track(drum)
 
@@ -64,6 +62,9 @@ class metronome():
             raise SystemExit('Could not load ' + SF2)
 
         fluidsynth.set_instrument(0, 0)
+        fluidsynth.set_instrument(instrument_bank_nr, instrument_bank_nr)
+        # MidiInstrument.names are purely standard tags, no incidence on instrument
+        #drum.name = drum.names[instrument_bank_nr]
         fluidsynth.main_volume(0, 127)
 
         self.play = True
