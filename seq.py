@@ -8,16 +8,34 @@ from mingus.containers import Note, NoteContainer, Bar, Track, Composition
 from mingus.containers.instrument import MidiInstrument
 from mingus.core import value, chords
 from mingus.midi import fluidsynth
+from putch import Putch as putch
 
-SF2 = 'Salsa.sf2'
+SF2 = 'african.sf2'
+
 
 class printer():
-    def notify(self, msg_type, param_dict):
-        #print msg_type
-        print param_dict
-        #putch(msg_type)
-        #sleep(0.2)
-        #putch('')
+    def notify(self, msg_type, notes_dict):
+        if notes_dict.has_key('note'):
+            putch(notes_dict['note'])
+
+
+class player():
+    def notify(self, msg_type, notes_dict):
+        '''
+        notes_dict is a dictionary that can have those items :
+            - 'note' : 'C-4'
+            - 'velocity' : 100
+            - 'channel' : 1
+        it could also have :
+            - 'notes' : ['C-3']
+            - 'channel' : 1
+        '''
+        if notes_dict.has_key('note'):
+            if type(notes_dict['note']) == 'str':
+                note = notes_dict['note']
+                note.velocity = notes_dict['velocity']
+                note.channel = notes_dict['channel']
+                fluidsynth.play_Note(note)
 
 
 metronome_bar = Bar()
@@ -50,10 +68,13 @@ seq.fs.program_reset()
 
 
 a_printer = printer()
+a_player = player()
 seq.attach(a_printer)
+seq.attach(a_player)
 
 print "playing now"
 seq.play_Track(metronome_track, bpm=80)
 sleep(1)
+print
 print "done"
 
