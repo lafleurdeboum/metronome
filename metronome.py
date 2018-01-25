@@ -97,12 +97,12 @@ if __name__ == '__main__':
             a_metronome.run(bpm)
         except KeyboardInterrupt:
             tellduration(starttime)
-            print 'Press q to quit, any other key to resume.'
+            print 'Press r to resume, any other key to quit.'
             key = getch()
-            if key == 'q':
+            if key == 'r':
+                continue
+            else:
                 a_metronome.stop()
                 raise SystemExit
-            else:
-                continue
 
 
