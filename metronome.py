@@ -7,7 +7,7 @@ syntax : metronome.py [tempo]
     where tempo is expressed in bpm. In its absence metronome will play at 80bpm.
 '''
 
-from getch import getch
+from switch import Switch
 from sys import argv
 from time import sleep, time
 from mingus.containers import Note, NoteContainer, Bar, Track, Composition
@@ -27,15 +27,14 @@ def tellduration(starttime):
     seconds = duration % 60
     sleep(0.3)
     if minutes == 0:
-        msg = 'interrupted by user after ' + str(seconds) + ' seconds. '
+        print 'interrupted by user after ' + str(seconds) + ' seconds.'
     else:
-        msg = 'interrupted by user after ' + str(minutes) + ' minutes ' + str(seconds) + ' seconds. '
-    print
-    print(msg)
+        print 'interrupted by user after ' + str(minutes) + ' minutes ' + str(seconds) + ' seconds.'
 
 
-class metronome():
+class Metronome():
     def __init__(self):
+        #self.bpm = bpm
         silence = Bar()
         silence.place_rest(1)
 
@@ -53,7 +52,7 @@ class metronome():
 
         self.metronome_track = Track(drum)
 
-        for i in range(10):
+        for i in range(1):
             # The mingus syntax is curious - this adds metronome_bar to metronome_track :
             self.metronome_track + metronome_bar
 
@@ -67,16 +66,21 @@ class metronome():
         #drum.name = drum.names[instrument_bank_nr]
         fluidsynth.main_volume(0, 127)
 
-        self.play = True
         # Breathe a (tenth of) second, toss it all
-        sleep(0.1)
+        #sleep(0.1)
+
+    def __call__(self, bpm):
+        self.run(bpm)
 
     def run(self, bpm):
-        while self.play == True:
+        self.starttime = time()
+        self.running = True
+        while self.running:
             fluidsynth.play_Track(self.metronome_track, bpm=bpm)
  
     def stop(self):
-        self.play = False
+        tellduration(self.starttime)
+        self.running = False
         #fluidsynth.stop_everything()
 
 
@@ -87,22 +91,7 @@ if __name__ == '__main__':
         bpm = default_bpm
     else:
         raise SystemExit(__doc__)
-    a_metronome = metronome()
 
-    print('press a key to start')
-    key = getch()
-    while True:
-        starttime = time()
-        try:
-            a_metronome.run(bpm)
-        except KeyboardInterrupt:
-            tellduration(starttime)
-            print 'Press r to resume, any other key to quit.'
-            key = getch()
-            if key == 'r':
-                continue
-            else:
-                a_metronome.stop()
-                raise SystemExit
-
+    a_metronome = Metronome()
+    myswitch = Switch(a_metronome, (bpm,))
 
