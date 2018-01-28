@@ -33,13 +33,33 @@ def tellduration(starttime):
     print(msg)
 
 
-class printer():
-    def notify(self, msg_type, param_dict):
-        #print msg_type
-        #print param_dict
-        putch(msg_type)
-        sleep(1)
-        putch('')
+class Printer():
+    def notify(self, msg_type, notes_dict):
+        # would need a separated thread
+        #putch(msg_type)
+        #sleep(.1)
+        #putch('')
+        if notes_dict.has_key('note'):
+            putch(notes_dict['note'])
+
+
+class Player():
+    def notify(self, msg_type, notes_dict):
+        '''
+        notes_dict is a dictionary that can have those items :
+            - 'note' : 'C-4'
+            - 'velocity' : 100
+            - 'channel' : 1
+        it could also have :
+            - 'notes' : ['C-3']
+            - 'channel' : 1
+        '''
+        if notes_dict.has_key('note'):
+            if isinstance(notes_dict['note'], str):
+                note = notes_dict['note']
+                note.velocity = notes_dict['velocity']
+                note.channel = notes_dict['channel']
+                fluidsynth.play_Note(note)
 
 
 class metronome():
@@ -49,7 +69,7 @@ class metronome():
 
         metronome_bar = Bar()
         #metronome_bar.place_notes('D-4', value.dots(4))
-        metronome_bar.place_notes('D-5', 4)
+        metronome_bar.place_notes('C-5', 4)
         metronome_bar.place_notes('D-4', 4)
         metronome_bar.place_notes('D-4', 4)
         metronome_bar.place_notes('D-4', 4)
@@ -77,9 +97,10 @@ class metronome():
         self.seq.set_instrument(0, 0)
         self.seq.main_volume(0, 127)
         self.seq.fs.program_reset()
-        self.printer = printer()
-        # TODO when an object is attached, the sequencer doesn't play a sound anymore !
-        #self.seq.attach(self.printer)
+        self.player = Player()
+        self.printer = Printer()
+        self.seq.attach(self.player)
+        self.seq.attach(self.printer)
 
         self.play = True
         # Breathe a (tenth of) second, toss it all
