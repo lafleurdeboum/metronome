@@ -8,6 +8,7 @@ syntax : metronome.py [tempo]
 '''
 
 from switch import Switch
+from putch import Putch as putch
 from sys import argv
 from time import sleep, time
 from mingus.containers import Note, NoteContainer, Bar, Track, Composition
@@ -32,9 +33,37 @@ def tellduration(starttime):
         print 'interrupted by user after ' + str(minutes) + ' minutes ' + str(seconds) + ' seconds.'
 
 
+class Printer():
+    def notify(self, msg_type, notes_dict):
+        # would need a separated thread
+        #putch(msg_type)
+        #sleep(.1)
+        #putch('')
+        if notes_dict.has_key('note'):
+            putch(notes_dict['note'])
+
+
+class Player():
+    def notify(self, msg_type, notes_dict):
+        '''
+        notes_dict is a dictionary that can have those items :
+            - 'note' : 'C-4'
+            - 'velocity' : 100
+            - 'channel' : 1
+        it could also have :
+            - 'notes' : ['C-3']
+            - 'channel' : 1
+        '''
+        if notes_dict.has_key('note'):
+            if isinstance(notes_dict['note'], str):
+                note = notes_dict['note']
+                note.velocity = notes_dict['velocity']
+                note.channel = notes_dict['channel']
+                fluidsynth.play_Note(note)
+
+
 class Metronome():
     def __init__(self):
-        #self.bpm = bpm
         silence = Bar()
         silence.place_rest(1)
 
@@ -57,17 +86,22 @@ class Metronome():
             self.metronome_track + metronome_bar
 
         #if not fluidsynth.init(SF2):
-        if not fluidsynth.init(SF2, driver='alsa'):
-            raise SystemExit('Could not load ' + SF2)
+        self.seq = fluidsynth.FluidSynthSequencer()
+        self.seq.init()
+        self.seq.load_sound_font(SF2)
+        self.seq.start_audio_output(driver="alsa")
 
-        fluidsynth.set_instrument(0, 0)
-        fluidsynth.set_instrument(instrument_bank_nr, instrument_bank_nr)
-        # MidiInstrument.names are purely standard tags, no incidence on instrument
-        #drum.name = drum.names[instrument_bank_nr]
-        fluidsynth.main_volume(0, 127)
+        self.seq.set_instrument(0, 0)
+        self.seq.main_volume(0, 127)
+        self.seq.fs.program_reset()
+        self.player = Player()
+        self.printer = Printer()
+        self.seq.attach(self.player)
+        self.seq.attach(self.printer)
 
+        self.play = True
         # Breathe a (tenth of) second, toss it all
-        #sleep(0.1)
+        sleep(0.1)
 
     def __call__(self, bpm):
         self.run(bpm)
@@ -76,11 +110,11 @@ class Metronome():
         self.starttime = time()
         self.running = True
         while self.running:
-            fluidsynth.play_Track(self.metronome_track, bpm=bpm)
+            self.seq.play_Track(self.metronome_track, bpm=bpm)
  
     def stop(self):
         tellduration(self.starttime)
-        self.running = False
+        self.play = False
         #fluidsynth.stop_everything()
 
 
