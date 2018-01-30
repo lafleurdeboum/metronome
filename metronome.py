@@ -133,14 +133,15 @@ if __name__ == '__main__':
         raise SystemExit(__doc__)
 
     while True:
+        print 'Starting metronome. Press q to quit, any other key to pause.'
         a_metronome = Metronome()
         a_metronome.tempo = bpm
         a_metronome.start()
         key = getch()
-        if key == 'q':
-            raise SystemExit()
         a_metronome.stop()
         del(a_metronome)
+        if key == 'q':
+            raise SystemExit()
         key = getch()
         if key == 'q':
             raise SystemExit()
