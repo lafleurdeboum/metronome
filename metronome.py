@@ -7,14 +7,15 @@ syntax : metronome.py [tempo]
     where tempo is expressed in bpm. In its absence metronome will play at 80bpm.
 '''
 
-from switch import Switch
 from putch import Putch as putch
+from getch import getch
 from sys import argv
 from time import sleep, time
 from mingus.containers import Note, NoteContainer, Bar, Track, Composition
 from mingus.containers.instrument import MidiInstrument
 from mingus.core import value, chords
 from mingus.midi import fluidsynth
+from threading import Thread
 
 
 default_bpm = 80
@@ -62,8 +63,18 @@ class Player():
                 fluidsynth.play_Note(note)
 
 
-class Metronome():
-    def __init__(self):
+class Metronome(Thread):
+    def attach_notifier(self):
+        printer = Printer()
+        self.sequencer.attach(printer)
+
+    def attach_player(self):
+        player = Player()
+        self.sequencer.attach(player)
+
+    def __init__(self, bpm=80):
+        super(Metronome, self).__init__()
+        self.tempo = bpm
         silence = Bar()
         silence.place_rest(1)
 
@@ -86,35 +97,30 @@ class Metronome():
             self.metronome_track + metronome_bar
 
         #if not fluidsynth.init(SF2):
-        self.seq = fluidsynth.FluidSynthSequencer()
-        self.seq.init()
-        self.seq.load_sound_font(SF2)
-        self.seq.start_audio_output(driver="alsa")
+        self.sequencer = fluidsynth.FluidSynthSequencer()
+        self.sequencer.init()
+        self.sequencer.load_sound_font(SF2)
+        self.sequencer.start_audio_output(driver="alsa")
 
-        self.seq.set_instrument(0, 0)
-        self.seq.main_volume(0, 127)
-        self.seq.fs.program_reset()
-        self.player = Player()
-        self.printer = Printer()
-        self.seq.attach(self.player)
-        self.seq.attach(self.printer)
+        self.sequencer.set_instrument(0, 0)
+        self.sequencer.main_volume(0, 127)
+        self.sequencer.fs.program_reset()
+        #self.attach_notifier()
+        self.attach_player()
 
-        self.play = True
-        # Breathe a (tenth of) second, toss it all
-        sleep(0.1)
-
-    def __call__(self, bpm):
-        self.run(bpm)
-
-    def run(self, bpm):
+    def run(self):
         self.starttime = time()
         self.running = True
         while self.running:
-            self.seq.play_Track(self.metronome_track, bpm=bpm)
+            # when we run stop, del(self.sequencer can occur after we get in the loop
+            if hasattr(self, 'sequencer'): 
+                self.sequencer.play_Track(self.metronome_track, bpm=self.tempo)
  
     def stop(self):
-        tellduration(self.starttime)
-        self.play = False
+        if hasattr(self, 'starttime'):
+            tellduration(self.starttime)
+        self.running = False
+        del(self.sequencer)
         #fluidsynth.stop_everything()
 
 
@@ -126,6 +132,16 @@ if __name__ == '__main__':
     else:
         raise SystemExit(__doc__)
 
-    a_metronome = Metronome()
-    myswitch = Switch(a_metronome, (bpm,))
+    while True:
+        a_metronome = Metronome()
+        a_metronome.tempo = bpm
+        a_metronome.start()
+        key = getch()
+        if key == 'q':
+            raise SystemExit()
+        a_metronome.stop()
+        del(a_metronome)
+        key = getch()
+        if key == 'q':
+            raise SystemExit()
 
