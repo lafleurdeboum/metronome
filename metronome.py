@@ -36,31 +36,26 @@ def tellduration(starttime):
 
 class Printer():
     def notify(self, msg_type, notes_dict):
-        # would need a separated thread
-        #putch(msg_type)
-        #sleep(.1)
-        #putch('')
-        if notes_dict.has_key('note'):
+        #if notes_dict.has_key('note'):
+        if msg_type == 5:
             putch(notes_dict['note'])
 
 
 class Player():
     def notify(self, msg_type, notes_dict):
         '''
-        notes_dict is a dictionary that can have those items :
+        if msg_type is 5, notes_dict is a dictionary that can have those items :
             - 'note' : 'C-4'
             - 'velocity' : 100
             - 'channel' : 1
-        it could also have :
-            - 'notes' : ['C-3']
-            - 'channel' : 1
         '''
-        if notes_dict.has_key('note'):
-            if isinstance(notes_dict['note'], str):
-                note = notes_dict['note']
-                note.velocity = notes_dict['velocity']
-                note.channel = notes_dict['channel']
-                fluidsynth.play_Note(note)
+        #if notes_dict.has_key('note'):
+        #    if isinstance(notes_dict['note'], str):
+        if msg_type == 5:
+            note = notes_dict['note']
+            note.velocity = notes_dict['velocity']
+            note.channel = notes_dict['channel']
+            fluidsynth.play_Note(note)
 
 
 class Metronome(Thread):

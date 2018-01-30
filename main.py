@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 from kivy.config import Config
-Config.set('graphics', 'fullscreen', '0')
+#Config.set('graphics', 'fullscreen', '0')
 from metronome import Metronome
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -10,7 +10,6 @@ from kivy.event import EventDispatcher
 from time import time
 
 class Metrosignal(EventDispatcher):
-
     def __init__(self):
         self.register_event_type('on_buzz')
         super(Metrosignal, self).__init__()
@@ -32,10 +31,8 @@ class MetronomeGUI(BoxLayout):
         - self.metronome.sequencer calls self.buzzer.notify when playing a note
         - self.buzzer emits on_buzz when called ; self.lightbuzz receives it
         - self.tempo_slider is initiated with self.metronome.tempo as value
-        - self.tempo_slider calls set_tempo_label when value is changed (see metronome.kv)
         - self.tempo_slider calls set_tempo when released (on_touch_up in metronome.kv)
     '''
-
     def __init__(self):
         self.launchtime = time()
         super(MetronomeGUI, self).__init__()
@@ -52,9 +49,6 @@ class MetronomeGUI(BoxLayout):
     def set_tempo(self, tempo):
         print 'setting tempo to', tempo
         self.metronome.tempo = tempo
-
-    def set_tempo_label(self, object, tempo):
-        self.ids.tempo_label.text = str(tempo)
 
     def switch_metronome(self):
         if self.ids.metronome_switch.active is True:
